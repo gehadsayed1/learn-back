@@ -1,9 +1,9 @@
 const { body } = require("express-validator");
-const validtionSckema = ()=>{
+const validationSchema = ()=>{
     return [body("price").notEmpty(), body("name").notEmpty()];
 }
 
 
-module.exports ={
-    validtionSckema
+module.exports = {
+    validationSchema
 }

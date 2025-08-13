@@ -1,5 +1,5 @@
 const express = require("express");
-const {validtionSckema} = require('../middleware/ValidationSchema.js')
+const { validationSchema } = require("../middleware/ValidationSchema.js");
 
 const {
   updateCourse,
@@ -12,18 +12,7 @@ const {
 const router = express.Router();
 
 
-
-// get all courses
-router
-  .route('/')
-  .get(getCourses)
-  .post(validtionSckema(), createCourse);
-
-// get single course
-router
-  .route('/:id')
-  .get(getCourse)
-  .patch(updateCourse)
-  .delete(deleteCourse);
+router.route("/").get(getCourses).post(validationSchema(), createCourse);
+router.route("/:id").get(getCourse).patch(updateCourse).delete(deleteCourse);
 
 module.exports = router;
