@@ -4,10 +4,11 @@ const {
     register,
     login
 } = require("../controller/Users.controller");
+const verifyToken = require("../middleware/verifyToken");
 
 const router = express.Router();
 
-router.route("/").get(getAllUsers);
+router.route("/").get(verifyToken, getAllUsers);
 router.route("/register").post(register);
 router.route("/login").post(login);
 
