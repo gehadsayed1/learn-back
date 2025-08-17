@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const userRoles = require('../utils/userRoles');
 
 
 const UserSchema = new mongoose.Schema({
@@ -28,6 +29,15 @@ const UserSchema = new mongoose.Schema({
     token:{
         type: String,
         required: true
+    },
+    role:{
+        type:String,
+        enum: [userRoles.USER, userRoles.ADMIN],
+        default: userRoles.USER
+    },
+    avatar: {
+        type: String,
+        default: '../uploads/avatar.png'
     }
 })
 

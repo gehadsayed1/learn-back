@@ -45,9 +45,13 @@ const createCourse = asyncWrapper(async (req, res) => {
 
 const deleteCourse = asyncWrapper(async (req, res) => {
     const id = req.params.id;
+    const course = await Course.findById(id);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
     await Course.deleteOne({ _id: id });
-    
-    return res.status(200).json({ message: SUCCESS , data:null });
+
+    return res.status(200).json({ message:'Course deleted successfully' });
 });
 
 module.exports = {

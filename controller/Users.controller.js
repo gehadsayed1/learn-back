@@ -2,7 +2,6 @@ const asyncWrapper = require("../middleware/asyncWrapper");
 const User = require("../Models/User.Model");
 const Apperror = require("../utils/Apperror");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { SUCCESS, ERROR, FALL } = require("../utils/httpStatusText");
 const generateJWT = require("../utils/generateJWT");
 
@@ -10,12 +9,13 @@ const getAllUsers = asyncWrapper(async (req, res) => {
   const limit = req.query.limit || 2;
   const page = req.query.page || 1;
   const skip = (page - 1) * limit;
-  const users = await User.find({}, { __v: false }).limit(limit).skip(skip);
+  // .limit(limit).skip(skip)
+  const users = await User.find({}, { __v: false  , password: false });
   res.json({ message: SUCCESS, data: { users } });
 });
 
 const register = asyncWrapper(async (req, res, next) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password , role } = req.body;
   const oldUser = await User.findOne({ email });
   if (oldUser) {
     return next(Apperror.create("User already exists", 409, ERROR));
@@ -26,12 +26,15 @@ const register = asyncWrapper(async (req, res, next) => {
     lastName,
     email,
     password: hashPassword,
+    role
+
   });
 
   // generate a token
-  const token = await generateJWT(newUser);
+  const token = await generateJWT({ id: newUser._id, role: newUser.role, email: newUser.email });
 
   newUser.token = token;
+  console.log(newUser);
 
   await newUser.save();
   return res.status(201).json({ message: SUCCESS, data: { user: newUser } });
@@ -48,7 +51,9 @@ const login = asyncWrapper(async (req, res, next) => {
     return next(Apperror.create("Invalid credentials", 401, ERROR));
   }
 
-  const token = await generateJWT(user);
+  console.log(user);
+
+  const token = await generateJWT({ id: user._id, role: user.role, email: user.email });
   return res.json({ message: SUCCESS, data: { token } });
 });
 

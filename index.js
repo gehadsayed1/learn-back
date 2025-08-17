@@ -1,10 +1,10 @@
 require('dotenv').config();
-
 const express = require("express");
 const mongoose = require('mongoose');
 const cors = require('cors');
 const coursesRouter = require('./routes/Courses.route');
 const usersRouter = require('./routes/Users.route');
+const path = require('path');
 
 
 // Debug: Check if environment variables are loaded
@@ -29,6 +29,7 @@ app.use(express.json());
 // Routes
 app.use('/api/courses', coursesRouter);
 app.use('/api/users', usersRouter);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // 404 handler for unmatched routes
 app.all('*', (req, res) => {
