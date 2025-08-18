@@ -26,7 +26,8 @@ const register = asyncWrapper(async (req, res, next) => {
     lastName,
     email,
     password: hashPassword,
-    role
+    role,
+    avatar: req.file.filename
 
   });
 
